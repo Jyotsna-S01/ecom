@@ -1,4 +1,4 @@
-import userModel from "../Models/user.js";
+import userModel from "../Models/userModel.js";
 import { hashPassword,comparePassword } from "../Helpers/authHelpers.js";
 import jwt from "jsonwebtoken"
 
@@ -24,7 +24,7 @@ export const registerController = async (req,res) =>{
         if (!answer) {
             return res.send({error: "Answer is required"});
         }
-        const existingUser = await userModel.findOne({email});
+        const existingUser = await userModel.findOne({ email })
 
         if(existingUser) {
             return res.status(200).send({
@@ -68,7 +68,7 @@ export const loginController = async (req,res) =>{
             });
         }
 
-        const user = await userModel.findOne({email});
+        const user = await userModel.findOne({ email });
         if(!user){
             return res.status(404).send({
                 success: false,
@@ -108,4 +108,46 @@ export const loginController = async (req,res) =>{
             error,
         });
     }
+}
+
+export const forgetPasswordController = async (req,res) =>{
+    try {
+        const { email, answer, newPassword} = req.body;
+
+        if(!email) {
+            return res.send({ error: "email is not registered" })
+        }
+        if(!answer){
+            return res.send({ error: "answer is invalid" })
+        }
+        if(!newPassword){
+            return res.send({ error: "password is required" })
+        }
+
+        const user = await userModel.findOne({ email, answer});
+        if(!user){
+            return res.status(404).send({
+                success: false,
+                message: "Email and answer is wrong"
+            })
+        };
+
+        const hashedPassword = await hashPassword(newPassword)
+        await userModel.findByIdAndUpdate(user._id,{
+            password: hashedPassword
+        })
+        res.status(200).send({
+            success: true,
+            message: "Password changed successfully"
+        })
+    } catch (error) {
+        res.send({
+            success: false,
+            message: "Something went wrong"
+        })
+    }
+}
+
+export const testController = async (req, res) =>{
+    res.send("Admin successfully verified")
 }
