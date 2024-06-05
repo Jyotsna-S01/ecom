@@ -151,3 +151,4 @@ export const forgetPasswordController = async (req,res) =>{
 export const testController = async (req, res) =>{
     res.send("Admin successfully verified")
 }
+

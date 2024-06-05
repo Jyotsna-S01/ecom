@@ -12,7 +12,7 @@ const Header = () => {
                         <p style={{font:'35px',padding:'5px'}}><b>ECOMMERCE APP</b></p>
                     </div>
                     <ul style={{listStyleType:'none', display:'flex', justifyContent:'right'}}>
-                        <li style={{padding:'10px'}}>Home</li>
+                        <li style={{padding:'10px'}}><Link to="/">Home</Link></li>
                         <li style={{padding:'10px'}}><Link to="/register">Register</Link></li>
                         <li style={{padding:'10px'}}><Link to="/login">Login</Link></li>
                         <li style={{padding:'10px'}}>Logout</li>

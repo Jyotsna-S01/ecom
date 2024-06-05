@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { spread } from 'axios';
 import Layout from '../Pages/Layout';
+import { useAuth } from '../Context/Auth.jsx';
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [auth,setAuth] = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post('http://localhost:3000/api/v1/auth/login', { email, password })
-            .then((response) => {
-                if (response.data.success) {
+            .then((res) => {
+                if (res.data.success) {
+                    setAuth({
+                        ...auth,
+                        user:res.data.user,
+                        token: res.data.token
+                    })
                     navigate("/");
                 }
                 else {
